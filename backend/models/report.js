@@ -18,22 +18,23 @@ const reportSchema = new mongoose.Schema(
     severity: {
       type: String,
       enum: ["minor", "moderate", "severe"],
+      required: true,
+      default: "minor",
     },
     // --- number of votes ---
     // TODO decide whether to store the vote in complaints or report ( i think in complaints)
     vote: {
       type: Number,
+      default: 0,
       min: 0,
     },
     location: {
       type: {
         type: String,
         enum: ["Point"],
-        required: true,
       },
       coordinates: {
         type: [Number], // Array of numbers: [longitude, latitude]
-        required: true,
       },
     },
     address: {

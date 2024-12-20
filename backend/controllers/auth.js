@@ -85,7 +85,7 @@ exports.isSignedIn = expressJwt({
 //Custom Middlewares
 const createToken = async (userId, res) => {
   const expiry_time = parseInt(process.env.EXPIRE_TIME) || 3600; // default to 1 hour if no expiry time is set
-  const token = jwt.sign({ userId: userId }, process.env.SECRET, {
+  const token = jwt.sign({ _id: userId }, process.env.SECRET, {
     expiresIn: expiry_time,
   });
 
@@ -97,6 +97,11 @@ const createToken = async (userId, res) => {
 };
 
 exports.isAuthenticated = (req, res, next) => {
+  const token = req.headers["authorization"];
+  console.log(token)
+  console.log(req.profile)
+  console.log(req.auth)
+
   let checker = req.profile && req.auth && req.profile._id == req.auth._id;
   if (!checker) {
     return res.status(403).json({
