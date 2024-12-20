@@ -2,36 +2,62 @@ const mongoose = require("mongoose");
 
 const reportSchema = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     image: {
       type: String,
-      maxlength: 64,
-      trim: true,
-    },
-    email: {
-      type: String,
       required: true,
-      trim: true,
-      unique: true,
     },
-    phone: {
+    description: {
       type: String,
       trim: true,
+    },
+    severity: {
+      type: String,
+      enum: ["minor", "moderate", "severe"],
+    },
+    // --- number of votes ---
+    // TODO decide whether to store the vote in complaints or report ( i think in complaints)
+    vote: {
+      type: Number,
+      min: 0,
+    },
+    location: {
+      type: {
+        type: String,
+        enum: ["Point"],
+        required: true,
+      },
+      coordinates: {
+        type: [Number], // Array of numbers: [longitude, latitude]
+        required: true,
+      },
     },
     address: {
-      type: String,
-      trim: true,
-    },
-    encry_password: {
-      type: String,
-    },
-    salt: String,
-    role: {
-      type: String,
-      enum: ["user", "admin"],
-      default: "user",
+      area_name: String,
+      city: {
+        type: String,
+        default: "Kathmandu",
+      },
+      country: {
+        type: String,
+        default: "Nepal",
+      },
+      zip_code: {
+        type: String,
+        default: "44600",
+      },
     },
   },
   {
     timestamps: true,
   }
 );
+reportSchema.index({ location: "2dsphere" });
+
+const Report = mongoose.model("Report", reportSchema);
+
+module.exports = Report;

@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-const crypto = require("crypto");
-const { v4 } = require("uuid");
+const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
   {
@@ -28,10 +27,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    encry_password: {
+    password: {
       type: String,
+      required: true,
     },
-    salt: String,
     role: {
       type: String,
       enum: ["user", "admin"],
@@ -43,17 +42,7 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema
-  .virtual("password")
-  .set(function (password) {
-    this._password = password;
-    this.salt = v4();
-    this.encry_password = this.securePassword(password);
-  })
-  .get(function () {
-    return this._password;
-  });
-
+// --- virtual to combine firstname and lastname ---
 userSchema
   .virtual("name")
   .get(function () {
@@ -65,28 +54,19 @@ userSchema
     this.set({ firstname, lastname });
   });
 
-userSchema.methods = {
-  authenticate: function (plainpassword) {
-    return this.securePassword(plainpassword) === this.encry_password;
-  },
-  securePassword: function (plainpassword) {
-    if (!plainpassword) return "";
-    try {
-      return crypto
-        .createHmac("sha256", this.salt)
-        .update(plainpassword)
-        .digest("hex");
-    } catch (err) {
-      return "";
-    }
-  },
+// --- pre-save hook to hash password before saving to database ---
+userSchema.pre("save", async function (next) {
+  if (this.isModified("password")) {
+    const saltRounds = 10;
+    this.password = await bcrypt.hash(this.password, saltRounds);
+  }
+  next();
+});
+
+userSchema.methods.authenticate = async function (plainpassword) {
+  return bcrypt.compare(plainpassword, this.password);
 };
 
 const User = mongoose.model("User", userSchema);
-
-// shows error log if there is a duplicate key creation
-User.on("index", (err) => {
-  console.log(err);
-});
 
 module.exports = User;
