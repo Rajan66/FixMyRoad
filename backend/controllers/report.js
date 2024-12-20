@@ -55,6 +55,7 @@ exports.getReportById = async (req, res) => {
 
     res.status(200).json(report);
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: err.message || "Failed to retrieve report" });
   }
 };
@@ -64,12 +65,14 @@ exports.getAllReports = async (req, res) => {
     const reports = await Report.find().populate("user", "name email");
     res.status(200).json(reports);
   } catch (err) {
+    console.log(err);
     res
       .status(500)
       .json({ error: err.message || "Failed to retrieve reports" });
   }
 };
 
+// TODO giving issues idk why
 exports.getReportsByAddress = async (req, res) => {
   try {
     const { area_name } = req.query;
@@ -94,6 +97,7 @@ exports.getReportsByAddress = async (req, res) => {
       reports,
     });
   } catch (err) {
+    console.log(err);
     res.status(500).json({
       error: err.message || "Failed to retrieve reports by address",
     });
@@ -119,6 +123,7 @@ exports.updateReport = async (req, res) => {
       report: updatedReport,
     });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: err.message || "Failed to update report" });
   }
 };
@@ -133,6 +138,7 @@ exports.deleteReport = async (req, res) => {
 
     res.status(200).json({ message: "Report deleted successfully" });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: err.message || "Error deleting report" });
   }
 };
@@ -156,6 +162,7 @@ exports.getReportsNearLocation = async (req, res) => {
 
     res.status(200).json(reports);
   } catch (err) {
+    console.log(err);
     res
       .status(500)
       .json({ error: err.message || "Failed to retrieve reports" });
