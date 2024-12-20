@@ -6,6 +6,8 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const { connection } = require("./config/dbconnection");
 
+const routes = require("./routes/route");
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -19,6 +21,7 @@ connection();
 const apiPrefix = "/api";
 
 // --- routes go here ----
+app.use(apiPrefix, routes);
 
 const port = process.env.PORT || 5000;
 
