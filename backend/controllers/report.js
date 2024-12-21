@@ -13,45 +13,41 @@ exports.createReport = async (req, res) => {
       image,
       description,
       severity,
-      sliderValue,
+      // sliderValue,
       location,
       address,
-      yesVotes,
-      noVotes,
-      totalVotes,
+      // yesVotes,
+      // noVotes,
+      // totalVotes,
     } = req.body;
     const user = req.auth._id;
-    if (![1, 2, 3].includes(sliderValue)) {
-      return res.status(400).json({
-        error:
-          "Invalid slider value. It must be 1 (Minor), 2 (Moderate), or 3 (Severe).",
-      });
-    }
+    // if (![1, 2, 3].includes(sliderValue)) {
+    //   return res.status(400).json({
+    //     error:
+    //       "Invalid slider value. It must be 1 (Minor), 2 (Moderate), or 3 (High).",
+    //   });
+    // }
 
-    severity = mapSliderToSeverity(sliderValue);
+    // severity = mapSliderToSeverity(sliderValue);
 
-    if (location) {
-      if (!location.coordinates || location.coordinates.length !== 2) {
-        return res.status(400).json({ error: "Invalid location format" });
-      }
-      if (!location.type || location.type !== "Point") {
-        return res.status(400).json({ error: "Location type must be 'Point'" });
-      }
-    }
+    // if (location) {
+    //   if (!location.coordinates || location.coordinates.length !== 2) {
+    //     return res.status(400).json({ error: "Invalid location format" });
+    //   }
+    //   if (!location.type || location.type !== "Point") {
+    //     return res.status(400).json({ error: "Location type must be 'Point'" });
+    //   }
+    // }
 
-    isValid = isValidVote(yesVotes, noVotes);
-    totalVotes = yesVotes + noVotes;
+    // isValid = isValidVote(yesVotes, noVotes);
+    // totalVotes = yesVotes + noVotes;
     const newReport = new Report({
       user,
       image,
       description,
       severity,
-      location,
       address,
-      totalVotes,
-      yesVotes,
-      noVotes,
-      isValid,
+      isValid: false,
     });
 
     const savedReport = await newReport.save();
@@ -140,7 +136,7 @@ exports.updateReport = async (req, res) => {
       if (![1, 2, 3].includes(updates.sliderValue)) {
         return res.status(400).json({
           error:
-            "Invalid slider value. It must be 1 (Minor), 2 (Moderate), or 3 (Severe).",
+            "Invalid slider value. It must be 1 (Minor), 2 (Moderate), or 3 (High).",
         });
       }
       updates.severity = mapSliderToSeverity(updates.sliderValue);
@@ -162,10 +158,12 @@ exports.updateReport = async (req, res) => {
     if (!updatedReport) {
       return res.status(404).json({ error: "Report not found" });
     }
+    const cluster = await this.createOrUpdateCluster(updatedReport, req, res);
 
     res.status(200).json({
       message: "Report updated successfully",
       report: updatedReport,
+      cluster: cluster,
     });
   } catch (err) {
     console.log(err);
@@ -231,11 +229,9 @@ const mapSliderToSeverity = (sliderValue) => {
   } else if (sliderValue === 2) {
     return "moderate";
   } else if (sliderValue === 3) {
-    return "severe";
+    return "high";
   }
 };
-
-const mongoose = require("mongoose");
 
 exports.createOrUpdateCluster = async (report, req, res) => {
   const { address, _id } = report;
@@ -253,7 +249,11 @@ exports.createOrUpdateCluster = async (report, req, res) => {
         }
       );
 
-      cluster = await Cluster.findById(cluster._id); // Re-fetch updated cluster
+      const reports = await Report.find({ _id: { $in: cluster.reports } });
+      cluster.aggregatedSeverity = calculateAggregatedSeverity(reports);
+
+      console.log(cluster.aggregatedSeverity);
+      await cluster.save(); // Save the updated cluster
 
       return cluster;
     } else {
@@ -263,13 +263,29 @@ exports.createOrUpdateCluster = async (report, req, res) => {
         reportCount: 1,
         isValid: false,
       });
-
-      await newCluster.save();
+      const report = await Report.findById(_id);
+      if (report) {
+        newCluster.aggregatedSeverity = calculateAggregatedSeverity([report]);
+      }
+      console.log(newCluster.aggregatedSeverity);
+      await newCluster.save(); // Save the new cluster
       return newCluster;
     }
   } catch (error) {
     console.error(error);
-       throw new Error("Error creating or updating cluster: " + error.message);
-
+    throw new Error("Error creating or updating cluster: " + error.message);
   }
+};
+
+const calculateAggregatedSeverity = (reports) => {
+  const severities = reports.map((report) => report.severity);
+
+  console.log(severities);
+  if (severities.includes("high")) {
+    return "high";
+  }
+  if (severities.includes("moderate")) {
+    return "moderate";
+  }
+  return "minor";
 };

@@ -17,7 +17,7 @@ const reportSchema = new mongoose.Schema(
     },
     severity: {
       type: String,
-      enum: ["minor", "moderate", "severe"],
+      enum: ["minor", "moderate", "high"],
       required: true,
       default: "minor",
     },

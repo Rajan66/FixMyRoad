@@ -45,7 +45,11 @@ exports.signin = async (req, res) => {
         error: "User doesn't exist",
       });
     }
-
+    if (user.status == "inactive" || user.status == null) {
+      return res.status(401).json({
+        error: "Please check your mail to activate your account",
+      });
+    }
     if (!user.authenticate(password)) {
       return res.status(401).json({
         error: "Email and Password do not match",

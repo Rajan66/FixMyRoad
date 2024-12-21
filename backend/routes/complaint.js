@@ -9,14 +9,14 @@ const {
 } = require("../controllers/complaint");
 const { isSignedIn, isAuthenticated, isAdmin } = require("../controllers/auth");
 
-router.post("/", isSignedIn, createComplaint);
+router.post("/complaint", isSignedIn, createComplaint);
 
-router.get("/", getAllComplaints);
+router.get("/complaint", getAllComplaints);
 
-router.get("/:id", getComplaintById);
+router.get("/complaint/:id", getComplaintById);
 
-router.put("/:id", isSignedIn, updateComplaint);
+router.put("/complaint/:id", isSignedIn, updateComplaint);
 
-router.delete("/:id", isSignedIn, isAdmin, deleteComplaint);
+router.delete("/complaint/:id", isSignedIn, isAdmin, deleteComplaint);
 
 module.exports = router;

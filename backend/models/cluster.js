@@ -15,12 +15,12 @@ const clusterSchema = new mongoose.Schema({
     },
     aggregatedSeverity: {
         type: String,
-        enum: ["minor", "moderate", "severe"],
+        enum: ["minor", "moderate", "high"],
         default: "minor",
     },
     isValid: {
         type: Boolean,
-        default: false,
+        default: false, // let admin approve this, admin changes this if they approve it.
     },
 }, {
     timestamps: true,
