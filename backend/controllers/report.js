@@ -55,7 +55,7 @@ exports.createReport = async(req, res) => {
 
         const savedReport = await newReport.save();
 
-        await this.createOrUpdateCluster(savedReport, req, res);
+        // await this.createOrUpdateCluster(savedReport, req, res);
 
         res.status(201).json({
             message: "Report created successfully",
@@ -255,6 +255,7 @@ exports.createOrUpdateCluster = async(report, req, res) => {
             return res.status(200).json({
                 message: "Cluster updated with new report",
                 cluster,
+                report
             });
         } else {
             // If no cluster exists for the location, create a new one
