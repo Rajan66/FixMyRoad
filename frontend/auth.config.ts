@@ -4,7 +4,7 @@
 // export const authConfig = {
 //   pages: {
 //     signIn: "/login",
-//   },
+//   },    
 //   callbacks: {
 //     async redirect({ url, baseUrl }) {
 //       return `${process.env.NEXT_PUBLIC_AUTH_REDIRECT_URL}`;

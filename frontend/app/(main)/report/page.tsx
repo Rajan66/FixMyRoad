@@ -2,7 +2,7 @@
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { districts } from "../constants";
+import { districts } from "../../../constants";
 import { Report, reportSchema } from "./report-schema";
 type FormFields = {
   locationDetails: boolean;

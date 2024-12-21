@@ -33,7 +33,7 @@ export default function Navbar(props: any) {
   return (
     <div>
       <nav
-        className={`font-sans text-black hover:text-white-300  w-full top-0 z-50 p-1 px-8 bg-transparent overflow-auto border-b border-solid border-gray-300 transition-all duration-200 ease-in-out ${
+        className={`font-sans poppins text-black hover w-full top-0 z-50 p-1 px-8 bg-transparent overflow-auto border-b border-solid border-gray-300 transition-all duration-200 ease-in-out ${
           showNavbar
             ? "opacity-100 translate-y-0"
             : "opacity-0 -translate-y-full"
@@ -43,6 +43,8 @@ export default function Navbar(props: any) {
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
         />
+
+        <img src="logo.png" alt="hi" className="h-10" />
         <ul className="flex justify-around items-center list-none mt-4 p-0 font-medium">
           {/* Logo Item */}
           <li className="mt-0">
@@ -74,7 +76,7 @@ export default function Navbar(props: any) {
           </li>
 
           <li className=" py-2 cursor-pointer relative group">
-            <Link href="/location" className="relative ">
+            <Link href="/statPage" className="relative ">
               Quick Stat
             </Link>
             <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-black transition-all duration-300 ease-in-out group-hover:w-full"></span>
@@ -85,6 +87,10 @@ export default function Navbar(props: any) {
             <i className="fa fa-fw fa-search cursor-pointer "></i>
           </li>
         </ul>
+        <p className="flex ">
+          
+          USER
+        </p>
       </nav>
     </div>
   );
