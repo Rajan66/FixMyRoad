@@ -6,11 +6,11 @@ import React from 'react'
 const page = () => {
   const router = useRouter();
 
-  router.push('/dashboard/restaurants')
+  // router.push('/dashboard')
 
 
   return (
-    <Loading />
+    <div>hello</div>
   )
 }
 
