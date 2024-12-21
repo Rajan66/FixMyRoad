@@ -31,6 +31,7 @@ exports.signup = async (req, res) => {
 exports.signin = async (req, res) => {
   try {
     const { email: emailAddress, password } = req.body;
+    // console.log(req.body)
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -39,7 +40,6 @@ exports.signin = async (req, res) => {
       });
     }
     let user = await User.findOne({ email: emailAddress });
-
     if (!user) {
       return res.status(401).json({
         error: "User doesn't exist",
@@ -54,13 +54,16 @@ exports.signin = async (req, res) => {
 
     const token = await createToken(user._id, res);
 
-    const { _id, name, email, role } = user;
+    const { _id, firstname,lastname, email, role } = user;
+
+    console.log(user);
 
     res.status(200).json({
       token,
       user: {
         _id,
-        name,
+        firstname,
+        lastname,
         email,
         role,
       },
