@@ -23,7 +23,7 @@
     "leaflet-geosearch": "^4.0.0",
     "lucide-react": "^0.468.0",
     "next": "15.1.2",
-    "next-auth": "^4.24.11",
+    "next-auth": "^5.0.0-beta.16",
     "promise": "^8.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
