@@ -6,6 +6,7 @@ import Link from "next/link";
 import { navItems } from "./list/navItems";
 import NavItem from "./NavItem";
 import { Button } from "@/components/ui/button";
+// import MblNavbar from "./MblNavbar";
 import { useSession } from "next-auth/react";
 import { CircleUser, Truck } from "lucide-react";
 import {
@@ -15,11 +16,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-// import LogoutBtnNav from "./LogoutBtnNav";
+import LogoutBtn from "../LogoutBtn";
 
-const Nav = () => {
-//   const { data: session } = useSession();
-//   const userRole = session?.user?.role;
+const Navbar = () => {
+  const { data: session } = useSession();
+  const userRole = session?.user?.role;
   return (
     <header className="flex gap-5 justify-between bg-white mx-[20px] md:mx-[40px] 2xl:mx-[80px] my-2 max-md:flex-wrap">
       <Link href={"/"} className="flex flex-col justify-center items-center ">
@@ -39,6 +40,7 @@ const Nav = () => {
           ))}
         </nav>
 
+        {!session ? (
           <>
             <Link
               href="/login"
@@ -57,14 +59,58 @@ const Nav = () => {
               </Button>
             </Link>
           </>
-    
-        {/* <div className="flex mmd:hidden justify-center items-center">
-          <MblNavbar />
-        </div> */}
+        ) : (
+          <>
+            {userRole === 'ADMIN' ? (
+              <Link
+                href={"/dashboard"}
+                className="hidden mmd:flex justify-center items-center"
+              >
+                <Button className="px-5 py-2.5 my-auto text-base h-[45px] font-medium text-white uppercase bg-primary border-r-0 rounded-sm hover:bg-primary/80">
+                  Dashboard
+                </Button>
+              </Link>
+            ) : (
+              <div className="hidden mmd:flex justify-center items-center gap-x-8">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <div className="flex items-center gap-x-5">
+                      <div className="size-[40px] flex items-center justify-center rounded-full bg-secondary  text-foreground text-lg font-semibold cursor-pointer">
+                        {session?.user?.name?.charAt(0)}
+                      </div>
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-20">
+                    <DropdownMenuGroup>
+                      <Link href={'/profile'}>
+                        <DropdownMenuItem className="justify-center">
+                          <CircleUser className="mr-2 size-4" />
+                          <span className="font-semibold text-black text-sm">Profile</span>
+                        </DropdownMenuItem>
+                      </Link>
+                      <Link href={'/profile/orders'}>
+                        <DropdownMenuItem className="justify-center">
+                          <Truck className="mr-2 size-4" />
+                          <span className="font-semibold text-black text-sm">Reports</span>
+                        </DropdownMenuItem>
+                      </Link>
+                      <DropdownMenuItem>
+                        <LogoutBtn />
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            )}
+          </>
+        )}
+
+        <div className="flex mmd:hidden justify-center items-center">
+          {/* <MblNavbar /> */}
+        </div>
       </div>
     </header >
   );
 };
 
-
-export default Nav;
+export default Navbar;

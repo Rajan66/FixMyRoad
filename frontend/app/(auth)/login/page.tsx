@@ -14,7 +14,7 @@ const Page = () => {
     if (status === 'loading') return;
 
     if (session) {
-      router.push('/dashboard');
+      router.push('/');
     } else {
       setLoading(false);
     }
