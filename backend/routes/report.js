@@ -19,13 +19,13 @@ router.param("userId", getUserById);
 // --- http routes ---
 router.post("/reports", isSignedIn, createReport);
 
+router.get("/reports/areas", getReportsByAddress); // giving issues idk why
+
 router.get("/reports", getAllReports);
 
 router.get("/reports/near", getReportsNearLocation);
 
 router.get("/reports/:reportId", getReportById);
-
-router.get("/reports/address", getReportsByAddress); // giving issues idk why
 
 router.patch("/reports/:reportId", updateReport);
 

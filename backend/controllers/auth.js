@@ -54,7 +54,7 @@ exports.signin = async (req, res) => {
 
     const token = await createToken(user._id, res);
 
-    const { _id, firstname,lastname, email, role } = user;
+    const { _id, firstname, lastname, email, role } = user;
 
     console.log(user);
 
