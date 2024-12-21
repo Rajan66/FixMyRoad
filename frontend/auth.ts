@@ -3,7 +3,7 @@
 // import Credentials from "next-auth/providers/credentials";
 // import { z } from "zod";
 // import type { LoginResponseData } from "@/lib/definitions";
-// import { PostRequest } from "./lib/axios/server/axios";
+// import { PostRequest } from "./lib/axios/client/axios";
 
 // async function loginWithEmailAndPassword(
 //   email: string,
