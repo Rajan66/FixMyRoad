@@ -1,7 +1,7 @@
 const Report = require("../models/report");
+const Cluster = require("../models/cluster");
 const { validationResult } = require("express-validator");
 
-// TODO test again
 exports.createReport = async(req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -9,7 +9,7 @@ exports.createReport = async(req, res) => {
     }
 
     try {
-        const {
+        var {
             image,
             description,
             severity,
@@ -22,7 +22,9 @@ exports.createReport = async(req, res) => {
         } = req.body;
         const user = req.auth._id;
         if (![1, 2, 3].includes(sliderValue)) {
-            return res.status(400).json({ error: "Invalid slider value. It must be 1 (Minor), 2 (Moderate), or 3 (Severe)." });
+            return res.status(400).json({
+                error: "Invalid slider value. It must be 1 (Minor), 2 (Moderate), or 3 (Severe).",
+            });
         }
 
         severity = mapSliderToSeverity(sliderValue);
@@ -36,6 +38,8 @@ exports.createReport = async(req, res) => {
             }
         }
 
+        isValid = isValidVote(yesVotes, noVotes);
+        totalVotes = yesVotes + noVotes;
         const newReport = new Report({
             user,
             image,
@@ -46,13 +50,12 @@ exports.createReport = async(req, res) => {
             totalVotes,
             yesVotes,
             noVotes,
-            isValid
+            isValid,
         });
 
-        isValid = isValidVote(yesVotes, noVotes);
-        totalVotes = yesVotes + noVotes;
-
         const savedReport = await newReport.save();
+
+        await this.createOrUpdateCluster(savedReport, req, res);
 
         res.status(201).json({
             message: "Report created successfully",
@@ -133,10 +136,13 @@ exports.updateReport = async(req, res) => {
         const updates = req.body;
 
         if (updates.sliderValue) {
-            if (![1, 2, 3].includes(updates.sliderValue)) { return res.status(400).json({ error: "Invalid slider value. It must be 1 (Minor), 2 (Moderate), or 3 (Severe)." });
+            if (![1, 2, 3].includes(updates.sliderValue)) {
+                return res.status(400).json({
+                    error: "Invalid slider value. It must be 1 (Minor), 2 (Moderate), or 3 (Severe).",
+                });
             }
-            updates.severity = mapSliderToSeverity(updates.sliderValue); 
-            delete updates.sliderValue; 
+            updates.severity = mapSliderToSeverity(updates.sliderValue);
+            delete updates.sliderValue;
         }
 
         if (updates.yesVotes !== undefined || updates.noVotes !== undefined) {
@@ -207,7 +213,7 @@ exports.getReportsNearLocation = async(req, res) => {
 };
 
 // ---- helper function ----
-isValidVote(yesVotes, noVotes) = () => {
+const isValidVote = (yesVotes, noVotes) => {
     if (yesVotes > noVotes) {
         return true;
     } else if (noVotes > yesVotes) {
@@ -215,14 +221,62 @@ isValidVote(yesVotes, noVotes) = () => {
     } else {
         return false; // if the vote is tie, then defaults to not a pothole
     }
-}
+};
 
-mapSliderToSeverity(sliderValue) = () => {
+const mapSliderToSeverity = (sliderValue) => {
     if (sliderValue === 1) {
-        return "Minor";
+        return "minor";
     } else if (sliderValue === 2) {
-        return "Moderate";
+        return "moderate";
     } else if (sliderValue === 3) {
-        return "Severe";
+        return "severe";
     }
-}
+};
+
+
+
+exports.createOrUpdateCluster = async(report, req, res) => {
+    const { location, reportId } = report;
+
+    try {
+        let cluster = await Cluster.findOne({ location });
+
+        if (cluster) {
+            if (!cluster.reports.includes(reportId)) {
+                cluster.reports.push(reportId);
+                cluster.reportCount += 1;
+            }
+
+            // Optionally update the aggregated severity or perform other updates
+            // Example of updating aggregated severity (this part depends on your logic)
+            // cluster.aggregatedSeverity = calculateAggregatedSeverity(cluster.reports);
+
+            await cluster.save();
+            return res.status(200).json({
+                message: "Cluster updated with new report",
+                cluster,
+            });
+        } else {
+            // If no cluster exists for the location, create a new one
+            const newCluster = new Cluster({
+                location,
+                reports: [reportId],
+                reportCount: 1,
+                isValid: false, // forgot why i used this
+            });
+
+            await newCluster.save();
+            return res.status(201).json({
+                message: "New cluster created with the report",
+                report: report,
+                cluster: newCluster,
+            });
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            message: "Error creating or updating cluster",
+            error: error.message,
+        });
+    }
+};
