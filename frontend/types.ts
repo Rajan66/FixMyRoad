@@ -1,5 +1,5 @@
 type User = {
-    id: number;
+    _id: number;
     firstName: string;
     lastName: string;
     email: string;
@@ -10,7 +10,7 @@ type User = {
 };
 
 type Reports = {
-    id: string;
+    _id: string;
     user: User;
     severity: string;
     totalVotes: string | undefined;
@@ -24,7 +24,7 @@ type Reports = {
 
 
 type Complaint = {
-    id: string;
+    _id: string;
     clusers: [Cluster];
     location: string;
     submittedTo: string;
@@ -34,7 +34,7 @@ type Complaint = {
 }
 
 type Cluster = {
-    id:string;
+    _id:string;
     reports:[Reports];
     reportCount: number;
     isValid: boolean;
@@ -43,7 +43,7 @@ type Cluster = {
 }
 
 type UserDetails = {
-    id: number;
+    _id: number;
     firstName: string;
     lastName: string;
     email: string;
@@ -55,7 +55,7 @@ type UserDetails = {
 
 
 type ReportDetails = {
-    id: string;
+    _id: string;
     user: User;
     severity: string;
     totalVotes: string | undefined;
@@ -68,7 +68,7 @@ type ReportDetails = {
 };
 
 type ComplaintDetails={
-    id: string;
+    _id: string;
     clusers: [Cluster];
     location: string;
     submittedTo: string;

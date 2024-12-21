@@ -1,6 +1,7 @@
 import axios from "./interceptor";
 
 export function PostRequest(url: string, data: any, config: any) {
+  console.log(url)
   return axios.post(url, data, config);
 }
 

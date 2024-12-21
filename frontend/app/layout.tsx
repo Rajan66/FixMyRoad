@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import NextAuthSessionProvider from "@/components/SessionProvider";
 import QueryProvider from "@/components/QueryProvider";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
@@ -30,11 +31,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Toaster position="top-center" reverseOrder={true} />
-        {/* <NextAuthSessionProvider> */}
-        <QueryProvider>
-          {children}
-        </QueryProvider>
-        {/* </NextAuthSessionProvider> */}
+        <NextAuthSessionProvider>
+          <QueryProvider>
+            {children}
+          </QueryProvider>
+        </NextAuthSessionProvider>
 
       </body>
     </html>

@@ -2,7 +2,7 @@ import axios from "axios";
 import promise from "promise";
 
 var axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_APP_URL,
+  baseURL: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:5000",
   withCredentials: false,
 });
 
