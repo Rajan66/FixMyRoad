@@ -11,11 +11,6 @@ const LandingPage = () => {
         <p className="text-3xl poppins mb-5 text-center font-light">Reports</p>
         <div className="grid grid-cols-3 gap-y-5">
           <ReportCard />
-          <ReportCard />
-          <ReportCard />
-          <ReportCard />
-          <ReportCard />
-          <ReportCard />
         </div>
       </div>
     </div>

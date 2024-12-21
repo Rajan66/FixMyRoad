@@ -1,7 +1,12 @@
+"use client"
 import React from "react";
 import { CircleUserRound } from "lucide-react";
+import { useGetAllReport } from "@/hooks/reportQueries";
 
 const ReportCard = () => {
+  const { data: reportData } = useGetAllReport();
+  console.log(reportData)
+
   return (
     <div className="h-[400px] w-[400px] bg-gray-200 rounded-lg flex flex-col p-5 relative">
       <div className="w-[100%] text-base font-light mb-5 flex items-center ">
