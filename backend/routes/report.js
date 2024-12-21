@@ -25,7 +25,7 @@ router.get("/reports/near", getReportsNearLocation);
 
 router.get("/reports/:reportId", getReportById);
 
-router.get("/reports/address", getReportsByAddress);
+router.get("/reports/address", getReportsByAddress); // giving issues idk why
 
 router.patch("/reports/:reportId", updateReport);
 
