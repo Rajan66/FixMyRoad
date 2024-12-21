@@ -20,6 +20,7 @@ import LogoutBtn from "../LogoutBtn";
 
 const Navbar = () => {
   const { data: session } = useSession();
+  console.log(session?.user)
   const userRole = session?.user?.role;
   return (
     <header className="flex gap-5 justify-between bg-white mx-[20px] md:mx-[40px] 2xl:mx-[80px] my-2 max-md:flex-wrap">
@@ -76,7 +77,7 @@ const Navbar = () => {
                   <DropdownMenuTrigger asChild>
                     <div className="flex items-center gap-x-5">
                       <div className="size-[40px] flex items-center justify-center rounded-full bg-secondary  text-foreground text-lg font-semibold cursor-pointer">
-                        {session?.user?.name?.charAt(0)}
+                        {session?.user?.firstname?.charAt(0)}
                       </div>
                     </div>
                   </DropdownMenuTrigger>
