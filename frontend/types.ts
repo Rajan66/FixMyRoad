@@ -1,7 +1,7 @@
 type User = {
     _id: number;
-    firstName: string;
-    lastName: string;
+    firstname: string;
+    lastname: string;
     email: string;
     contact: string;
     role: string;

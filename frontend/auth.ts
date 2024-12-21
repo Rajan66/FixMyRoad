@@ -11,7 +11,6 @@ async function loginWithEmailAndPassword(
 ): Promise<LoginResponseData | undefined> {
   try {
     const res = await PostRequest(`/api/signin`, { email, password }, {});
-    console.log(res.data)
     return res.data;
   } catch (error) {
     console.error("Failed to fetch user:", error);

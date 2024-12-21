@@ -56,9 +56,9 @@ export default function SignupForm() {
                     <Label htmlFor="name">First Name</Label>
                     <div className="relative flex flex-col gap-y-1">
                         <Input
-                            {...register("firstName")}
+                            {...register("firstname")}
                             className={cn("pl-10 py-5", {
-                                "border-primary": errors?.firstName?.message,
+                                "border-primary": errors?.firstname?.message,
                             })}
                             id="firstName"
                             type="text"
@@ -66,9 +66,9 @@ export default function SignupForm() {
                             placeholder="Enter your First name"
                         />
                         <CircleUserRound className="pointer-events-none absolute top-[0.7rem] left-3 size-5 text-gray-500 peer-focus:text-gray-900" />
-                        {errors?.firstName?.message && (
+                        {errors?.firstname?.message && (
                             <span className="text-destructive text-xs font-semibold">
-                                {errors?.firstName?.message}
+                                {errors?.firstname?.message}
                             </span>
                         )}
                     </div>
@@ -77,9 +77,9 @@ export default function SignupForm() {
                     <Label htmlFor="name">Last Name</Label>
                     <div className="relative flex flex-col gap-y-1">
                         <Input
-                            {...register("lastName")}
+                            {...register("lastname")}
                             className={cn("pl-10 py-5", {
-                                "border-primary": errors?.lastName?.message,
+                                "border-primary": errors?.lastname?.message,
                             })}
                             id="lastName"
                             type="text"
@@ -87,9 +87,9 @@ export default function SignupForm() {
                             placeholder="Enter your Last name"
                         />
                         <CircleUserRound className="pointer-events-none absolute top-[0.7rem] left-3 size-5 text-gray-500 peer-focus:text-gray-900" />
-                        {errors?.lastName?.message && (
+                        {errors?.lastname?.message && (
                             <span className="text-destructive text-xs font-semibold">
-                                {errors?.lastName?.message}
+                                {errors?.lastname?.message}
                             </span>
                         )}
                     </div>
