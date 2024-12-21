@@ -9,7 +9,7 @@ const reportSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      required: true,
+      // required: true,
     },
     description: {
       type: String,
@@ -22,12 +22,22 @@ const reportSchema = new mongoose.Schema(
       default: "minor",
     },
     // --- number of votes ---
-    // TODO decide whether to store the vote in complaints or report ( i think in complaints)
-    vote: {
+    totalVotes: {
       type: Number,
       default: 0,
       min: 0,
     },
+    yesVotes: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    noVotes: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    // ------------------
     location: {
       type: {
         type: String,
@@ -38,7 +48,7 @@ const reportSchema = new mongoose.Schema(
       },
     },
     address: {
-      area_name: String,
+      area: String,
       city: {
         type: String,
         default: "Kathmandu",
@@ -51,6 +61,11 @@ const reportSchema = new mongoose.Schema(
         type: String,
         default: "44600",
       },
+    },
+    isValid: {
+      type: Boolean,
+      required: true,
+      default: true,
     },
   },
   {

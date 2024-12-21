@@ -1,30 +1,30 @@
 const mongoose = require("mongoose");
 
-const complaintSchema = new mongoose.Schema(
-  {
-    // --- reports holds the reportId of similar reports ---
-    // --- similarity of reports is decided through address ---
-    reports: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Report",
-        required: true,
-      },
-    ],
-    status: {
-      type: String,
-      enum: ["unresolved", "pending", "resolved"],
+// Create complaint after creating clusters and add the location from cluster
+const complaintSchema = new mongoose.Schema({
+  clusters: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "Cluster",
     },
-    sent_at: {
-      type: Date,
-      default: Date.now, // TODO not decided whether to set the sent date after vote ends or after creation of all reports
-    },
+  ],
+  location: {
+    type: String,
+    required: true,
   },
-  {
-    timestamps: true,
-  }
-);
+  submittedTo: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  status: {
+    type: String,
+    enum: ["pending", "unresolved", "resolved"],
+    default: "unresolved",
+  },
+});
 
-const Complaint = mongoose.model("Complaint", complaintSchema);
-
-module.exports = Complaint;
+module.exports = mongoose.model("Complaint", complaintSchema);
