@@ -16,6 +16,7 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { set } from "zod";
 
 type FormFields = {
   district?: string;
@@ -42,7 +43,13 @@ function ChangeMapView({ coords }: { coords: [number, number] }) {
 const MapClickHandler = ({
   setLocation,
 }: {
-  setLocation: (loc: { lat: number; lng: number; address?: string }) => void;
+  setLocation: React.Dispatch<
+    React.SetStateAction<{
+      lat: number;
+      lng: number;
+      address?: string;
+    } | null>
+  >;
 }) => {
   useMapEvents({
     async click(e) {
@@ -57,6 +64,7 @@ const MapClickHandler = ({
           lng,
           address: data.display_name,
         });
+        // console.log(., "sdasdasd");
         toast.success(`Location selected: ${lat}, ${lng}`);
       } catch (error) {
         setLocation({ lat, lng });
@@ -84,28 +92,53 @@ const LocationForm: React.FC = () => {
     lat: number;
     lng: number;
     address?: string;
-  } | null>(null);
+  } | null>({ lat: mapCenter[0], lng: mapCenter[1] });
   const [loading, setLoading] = useState(true);
-
+  console.log(location?.address, "data is here");
+  console.log("useEffect is running...");
   useEffect(() => {
+    console.log("Inside useEffect...");
     if (navigator.geolocation) {
+      console.log("Geolocation is supported.");
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          console.log(position, "Geolocation position fetched.");
           const userLocation: [number, number] = [
             position.coords.latitude,
             position.coords.longitude,
           ];
+          async function getLocation() {
+            const response = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${userLocation[0]}&lon=${userLocation[1]}`
+            );
+            const data = await response.json();
+
+            setLocation({
+              lat: userLocation[0],
+              lng: userLocation[1],
+              address: data.display_name,
+            });
+          }
+          getLocation();
+          console.log(userLocation);
           setMapCenter(userLocation);
           setLoading(false);
+          toast.success(userLocation.toString());
         },
         (error) => {
           console.error("Error fetching location:", error);
+          setMapCenter([27.700769, 85.30014]); // Default to Kathmandu
           setLoading(false);
-          toast.error("Could not fetch your location. Using default location.");
+          toast.error(
+            "Could not fetch your location. Default location is being used."
+          );
         }
       );
     } else {
+      console.log("Geolocation is not supported.");
+      setMapCenter([27.700769, 85.30014]);
       setLoading(false);
+      toast.error("Geolocation is not supported by your browser.");
     }
   }, []);
 
@@ -115,7 +148,7 @@ const LocationForm: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center mt-10">
       <div className="w-full sm:w-4/5 lg:w-1/2 xl:w-1/3">
         <ToastContainer />
         <form
@@ -196,7 +229,9 @@ const LocationForm: React.FC = () => {
                 type="text"
                 id="locationName"
                 placeholder="e.g., Basantapur Durbar Square"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                value={location?.address || ""}
+                readOnly
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-gray-100"
               />
             </div>
 
