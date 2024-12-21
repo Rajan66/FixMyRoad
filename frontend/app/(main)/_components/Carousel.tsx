@@ -39,7 +39,7 @@ export default function Carousel({ images }: { images: string[] }) {
             <img
               src={image}
               alt={`Slide ${index + 1}`}
-              className="w-full h-98 object-cover rounded-sm"
+              className="w-full h-96 object-cover rounded-sm"
             />
           </div>
         ))}

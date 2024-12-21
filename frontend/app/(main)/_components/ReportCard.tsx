@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import { CircleUserRound } from "lucide-react";
 import Link from "next/link";
@@ -6,13 +6,16 @@ import { useGetAllReport } from "@/hooks/reportQueries";
 
 const ReportCard = () => {
   const { data: reportData } = useGetAllReport();
-  console.log(reportData)
+  console.log(reportData);
 
   return (
     <div className="h-[400px] w-[400px] bg-gray-200 rounded-lg flex flex-col p-5 relative">
-      <div className="w-[100%] text-base font-light mb-5 flex items-center ">
-        <CircleUserRound className="mr-2" />
-        Nccs
+      <div className="w-[100%] text-base font-light mb-5 flex items-center justify-between ">
+        <div className="flex items-center">
+          <CircleUserRound className="mr-2" />
+          Nccs
+        </div>
+        <div className="">Paknajol, Kathmandu</div>
       </div>
       <div className="flex h-[65%]">
         <img
@@ -33,8 +36,9 @@ const ReportCard = () => {
           />
         </div> */}
       </div>
-      <div className="mt-2">Paknajol, Kathmandu</div>
-      <div className="mt-2">Votes: 10</div>
+      <div className="mt-2"></div>
+      <div className="mt-2">Report Count: 10</div>
+      <div className="mt-2">Severity: High</div>
       <Link href="/reportPage">
         <div className="absolute  bottom-8 right-8 bg-gray-300 p-2 rounded-sm hover:scale-105">
           View More
