@@ -7,7 +7,6 @@ import Navbar from "../../components/Header/Navbar";
 const page = () => {
   return (
     <div>
-      <Navbar />
       <LandingPage />
     </div>
   );
